@@ -1,10 +1,12 @@
 use std::fmt;
 
+#[derive(Clone, Copy)]
 pub enum PieceColor {
     White,
     Black,
 }
 
+#[derive(Clone, Copy)]
 pub enum PieceType {
     King,
     Queen,
@@ -15,8 +17,8 @@ pub enum PieceType {
 }
 
 pub struct Piece {
-    color: PieceColor,
-    kind: PieceType,
+    pub color: PieceColor,
+    pub kind: PieceType,
 }
 
 impl fmt::Display for Piece {

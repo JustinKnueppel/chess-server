@@ -60,26 +60,32 @@ impl Board {
     pub fn new() -> Self {
         let squares = (0..8)
             .map(|row| {
-                // match row {
-                //     0 => BACK_ROW.clone(),
-                //     7 => BACK_ROW
-                //         .iter()
-                //         .rev()
-                //         .collect::<Vec<Square>>()
-                //         .try_into()
-                //         .unwrap(),
-                //     _ => BACK_ROW.clone(),
-                // }
-                (0..8)
-                    .map(|col| {
-                        let color = if (row + col) % 2 == 0 {
-                            SquareColor::White
-                        } else {
-                            SquareColor::Black
-                        };
-                        Square { color, piece: None }
-                    })
-                    .collect()
+                match row {
+                    0 => BACK_ROW
+                        .iter()
+                        .map(|piece_type| return Some(piece_type.clone()))
+                        .collect::<Vec<Option<pieces::PieceType>>>(),
+                    7 => BACK_ROW
+                        .iter()
+                        .rev()
+                        .map(|piece_type| return Some(piece_type.clone()))
+                        .collect::<Vec<Option<pieces::PieceType>>>(),
+                    _ => (0..8)
+                        .map(|_| None)
+                        .collect::<Vec<Option<pieces::PieceType>>>(),
+                }
+                .iter()
+                .map(|piece_type| Square {
+                    color: SquareColor::White,
+                    piece: match piece_type {
+                        Some(pt) => Some(pieces::Piece {
+                            color: pieces::PieceColor::White,
+                            kind: pt.clone(),
+                        }),
+                        None => None,
+                    },
+                })
+                .collect::<Vec<Square>>()
             })
             .collect();
         return Board { squares };
