@@ -44,6 +44,7 @@ impl fmt::Display for Board {
         let icons = self
             .squares
             .iter()
+            .rev()
             .map(|row| {
                 row.iter()
                     .map(|square| square.to_string())
@@ -59,35 +60,63 @@ impl fmt::Display for Board {
 impl Board {
     pub fn new() -> Self {
         let squares = (0..8)
-            .map(|row| {
-                match row {
-                    0 => BACK_ROW
-                        .iter()
-                        .map(|piece_type| return Some(piece_type.clone()))
-                        .collect::<Vec<Option<pieces::PieceType>>>(),
-                    7 => BACK_ROW
-                        .iter()
-                        .rev()
-                        .map(|piece_type| return Some(piece_type.clone()))
-                        .collect::<Vec<Option<pieces::PieceType>>>(),
-                    _ => (0..8)
-                        .map(|_| None)
-                        .collect::<Vec<Option<pieces::PieceType>>>(),
-                }
-                .iter()
-                .map(|piece_type| Square {
-                    color: SquareColor::White,
-                    piece: match piece_type {
-                        Some(pt) => Some(pieces::Piece {
+            .map(|row| match row {
+                0 => BACK_ROW
+                    .iter()
+                    .zip(0..8)
+                    .map(|(piece_type, col)| Square {
+                        color: get_color(row, col),
+                        piece: Some(pieces::Piece {
                             color: pieces::PieceColor::White,
-                            kind: pt.clone(),
+                            kind: piece_type.clone(),
                         }),
-                        None => None,
-                    },
-                })
-                .collect::<Vec<Square>>()
+                    })
+                    .collect::<Vec<Square>>(),
+                1 => (0..8)
+                    .map(|col| Square {
+                        color: get_color(row, col),
+                        piece: Some(pieces::Piece {
+                            color: pieces::PieceColor::White,
+                            kind: pieces::PieceType::Pawn,
+                        }),
+                    })
+                    .collect::<Vec<Square>>(),
+                6 => (0..8)
+                    .map(|col| Square {
+                        color: get_color(row, col),
+                        piece: Some(pieces::Piece {
+                            color: pieces::PieceColor::Black,
+                            kind: pieces::PieceType::Pawn,
+                        }),
+                    })
+                    .collect::<Vec<Square>>(),
+                7 => BACK_ROW
+                    .iter()
+                    .zip(0..8)
+                    .map(|(piece_type, col)| Square {
+                        color: get_color(row, col),
+                        piece: Some(pieces::Piece {
+                            color: pieces::PieceColor::Black,
+                            kind: piece_type.clone(),
+                        }),
+                    })
+                    .collect::<Vec<Square>>(),
+                _ => (0..8)
+                    .map(|col| Square {
+                        color: get_color(row, col),
+                        piece: None,
+                    })
+                    .collect::<Vec<Square>>(),
             })
             .collect();
         return Board { squares };
     }
+}
+
+fn get_color(row: i32, col: i32) -> SquareColor {
+    return if (row + col) % 2 == 0 {
+        SquareColor::White
+    } else {
+        SquareColor::Black
+    };
 }

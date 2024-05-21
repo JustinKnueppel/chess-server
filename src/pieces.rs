@@ -16,6 +16,7 @@ pub enum PieceType {
     Bishop,
 }
 
+#[derive(Clone, Copy)]
 pub struct Piece {
     pub color: PieceColor,
     pub kind: PieceType,
@@ -53,6 +54,6 @@ impl fmt::Display for Piece {
                 PieceColor::Black => "b",
             },
         };
-        write!(f, "{}", icon)
+        write!(f, "{} ", icon)
     }
 }
