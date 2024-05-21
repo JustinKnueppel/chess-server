@@ -59,7 +59,7 @@ impl fmt::Display for Board {
 
 impl Board {
     pub fn new() -> Self {
-        let squares = (0..8)
+        let squares: Vec<Vec<Square>> = (0..8)
             .map(|row| match row {
                 0 => BACK_ROW
                     .iter()
@@ -119,4 +119,34 @@ fn get_color(row: i32, col: i32) -> SquareColor {
     } else {
         SquareColor::Black
     };
+}
+
+pub fn board_from_str(board: &str) -> Result<Board, String> {
+    let lines = board.trim().split("\n");
+    let lines_count = lines.count();
+    if lines_count != 8 {
+        println!("{}", lines_count);
+        return Err("Should be 8 rows".to_string());
+    }
+    // TODO: This should parse in reverse order
+    let squares: Vec<Vec<Square>> = board
+        .trim()
+        .split("\n")
+        .zip(0..8)
+        .map(|(line, row)| {
+            return line
+                .trim()
+                .chars()
+                .zip(0..8)
+                .map(|(c, col)| Square {
+                    color: get_color(row, col),
+                    piece: pieces::Piece::try_from(c).ok(),
+                })
+                .collect();
+        })
+        .collect();
+    if !squares.iter().all(|row| row.len() == 8) {
+        return Err("Each row must have 8 columns".to_string());
+    }
+    Ok(Board { squares })
 }

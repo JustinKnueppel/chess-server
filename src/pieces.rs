@@ -57,3 +57,61 @@ impl fmt::Display for Piece {
         write!(f, "{} ", icon)
     }
 }
+
+impl TryFrom<char> for Piece {
+    type Error = String;
+
+    fn try_from(value: char) -> Result<Self, Self::Error> {
+        match value {
+            'K' => Ok(Piece {
+                color: PieceColor::White,
+                kind: PieceType::King,
+            }),
+            'k' => Ok(Piece {
+                color: PieceColor::Black,
+                kind: PieceType::King,
+            }),
+            'Q' => Ok(Piece {
+                color: PieceColor::White,
+                kind: PieceType::Queen,
+            }),
+            'q' => Ok(Piece {
+                color: PieceColor::Black,
+                kind: PieceType::Queen,
+            }),
+            'R' => Ok(Piece {
+                color: PieceColor::White,
+                kind: PieceType::Rook,
+            }),
+            'r' => Ok(Piece {
+                color: PieceColor::Black,
+                kind: PieceType::Rook,
+            }),
+            'N' => Ok(Piece {
+                color: PieceColor::White,
+                kind: PieceType::Knight,
+            }),
+            'n' => Ok(Piece {
+                color: PieceColor::Black,
+                kind: PieceType::Knight,
+            }),
+            'B' => Ok(Piece {
+                color: PieceColor::White,
+                kind: PieceType::Bishop,
+            }),
+            'b' => Ok(Piece {
+                color: PieceColor::Black,
+                kind: PieceType::Bishop,
+            }),
+            'P' => Ok(Piece {
+                color: PieceColor::White,
+                kind: PieceType::Pawn,
+            }),
+            'p' => Ok(Piece {
+                color: PieceColor::Black,
+                kind: PieceType::Pawn,
+            }),
+            _ => Err("Not a piece".to_string()),
+        }
+    }
+}
