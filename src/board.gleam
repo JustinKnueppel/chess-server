@@ -23,9 +23,11 @@ pub type ParseError {
 }
 
 pub fn from_string(str: String) -> Result(Board, ParseError) {
-  string.split(str, "\n")
-  |> list.map(string.split(_, ""))
-  |> list.try_map(list.try_map(_, square_from_string))
+  split_8(str, "\n")
+  |> result.try(fn(lines) { list.try_map(lines, split_8(_, "")) })
+  |> result.try(fn(squares) {
+    list.try_map(squares, list.try_map(_, square_from_string))
+  })
   |> result.map(fn(squares) { list.flatten(squares) |> Board })
 }
 
